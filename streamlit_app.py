@@ -9,6 +9,7 @@ from llm import *
 st.title("🌍 Llama Impact Hackathon - Roma")
 st.caption("💡 Unisciti a noi per creare soluzioni innovative ad alto impatto sociale")
 
+history=[]
 
 # Inizializza la history della chat, se non esiste già
 if "history" not in st.session_state:
@@ -20,13 +21,16 @@ if query := st.chat_input():
     st.session_state["history"].append({"role": "user", "content": query})
     
     # Invia il messaggio e ottieni la risposta
+    print(f"st.session_state['history']: {str(st.session_state['history'])}")
     
-    response,last_response=ask_gaia_with_tool(str(st.session_state["history"]))
+    history.append({"USER": query})
+    response,last_response=ask_gaia_with_tool(history)
     
     # Aggiungi la risposta dell'assistente alla history
-    st.session_state["history"].append({"role": "assistant", "content": last_response})
+    st.session_state["history"].append({"role": "assistant", "content": (last_response)})
     
     # Visualizza la history dei messaggi nella chat
     for message in st.session_state["history"]:
         st.chat_message(message["role"]).write(message["content"])
+        history[-1]["AI"]= message["content"]
 

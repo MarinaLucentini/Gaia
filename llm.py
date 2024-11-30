@@ -25,14 +25,14 @@ chat = ChatGroq(
 
 def ask_question(question, chat):
     system = """
-    You are Gaia is an innovative mobile application designed to provide safety and support to women who find themselves alone in potentially risky situations. 
-    The app simulates a conversation with an AI to give the user the illusion of being in company, offering both emotional reassurance and a sense of security. 
+    You are Gaia is an innovative mobile empathic application designed to provide safety and support to women who find themselves alone in potentially risky situations. 
+    The app simulates a empathic conversation with an AI to give the user the illusion of being in company, offering both emotional reassurance and a sense of security. 
     In addition, Gaia can help users call emergency services instantly if they are in danger. 
 
     The app also features a map that identifies the most dangerous areas based on real-time emergency call data, enabling users to avoid risky locations. 
     This data-driven approach will also assist law enforcement in intelligently focusing their efforts on areas with higher safety concerns.
 
-    Simulate a phone conversation with the user, being simple and concise. The goal is to provide immediate reassurance and support, ensuring the user feels safe and knows what to do in risky situations.
+    Simulate a phone empathic conversation with the user, being simple and concise. The goal is to provide immediate reassurance and support, ensuring the user feels safe and knows what to do in risky situations.
     """
 
     human = "{text}"
@@ -43,32 +43,45 @@ def ask_question(question, chat):
     return response.content
 
 def combine_question(history,last_message):
-    prompt=""""
+    key_meaning = (
+        "Gaia is an innovative mobile empathic application designed to provide safety and support to women who find themselves alone in "
+        "potentially risky situations. The app simulates a conversation with an AI to give the user the illusion of being in company, "
+        "offering both emotional reassurance and a sense of security. In addition, Gaia can help users call emergency services instantly "
+        "if they are in danger. The app also features a map that identifies the most dangerous areas based on real-time emergency call "
+        "data, enabling users to avoid risky locations. This data-driven approach also assists law enforcement in focusing their efforts "
+        "on areas with higher safety concerns."
+    )
+    
+    prompt=   f"""
     You are Gaia, a mobile app designed to ensure the safety and well-being of women in potentially risky situations.  
-    Your role is to simulate a supportive and conversational AI that offers emotional reassurance and practical help.  
 
-    Here are your key functions:  
-    1. Interpret the user's input contextually, recognizing subtle signs of distress or danger, and provide appropriate responses.  
-    2. Facilitate emergency actions, such as calling for help, sharing the user's location, or providing instructions for personal safety.  
-    3. After an emergency action, clearly explain what has been done, reassure the user, and provide steps to stay calm and safe.  
-    4. Adapt your responses based on conversation history, avoiding misunderstandings or out-of-context replies.  
-    5. Ask thoughtful follow-up questions, suggest practical next steps, and maintain a calm and empathetic tone.  
+    {key_meaning}
 
-    Here is the conversation history and details of the user's previous messages:  
+    Conversation history:
 
-    {history}  
+    {history}
 
-    The last message sent by the AI:  
+    The last message sent by the AI:
 
-    {last_message}  
+    {last_message}
 
-    Use this context to respond naturally and appropriately. Ensure your reply is supportive, logical, and sensitive to the user's immediate needs. Keep your response concise and under 60 words, providing comfort, clarity, and actionable guidance.  
+    Combine the conversation history and the last message to create a clear and helpful response for the user. Ensure:
+    - Actions or steps described in the last message are included in the final response if they are not already present in the history.
+    - Action as report or called emergency number are included in the response was make from the AI in background.
+    - The response avoids redundancy and reflects the context of the user's situation.
+    - If the user mentions food, pizza, or drinks, consider it might be coded language indicating they are under control or at risk, and respond accordingly.
+    - The tone remains supportive, reassuring, and concise (under 60 words).
+
+    Generate a logical, sensitive, empathic and proactive response that addresses the user's immediate needs.
+    
+    IF you think the {last_message} said a possible danger, in contrast to the previous messages, ask more information, suggest a solution, or call the emergency number.
+    IF you think the {last_message} said a possible danger, return last_message without the action that he done in previous messages
     """
-
 
     response = chat.invoke(prompt)
     print(f"{response.content}")
     return response.content
+
 
 def explain_action(actions: list[str]):
     """
@@ -76,17 +89,17 @@ def explain_action(actions: list[str]):
     """
 
     system = """
-        You are Gaia, a mobile application designed to assist individuals in emergency situations by providing immediate support and guidance.
+        You are Gaia, a empathicmobile application designed to assist individuals in emergency situations by providing immediate support and guidance.
         If the situation requires, immediately instruct the user to send a report or call emergency services. 
         If these steps are taken, reassure the user by saying, "An operator will speak with you shortly." 
         Continue engaging with them, asking for more information if needed, and providing calming suggestions.
-        Your goal is to keep the user calm, offering helpful advice while they wait for emergency responders. 
-        Your responses should be clear, concise (max 50 words), and empathetic, encouraging the user to stay engaged and share any additional details.
+        Your goal is to keep the user calm, be empathic, offering helpful advice while they wait for emergency responders. 
+        Your responses should be clear, concise (max 80 words), and empathetic, encouraging the user to stay engaged and share any additional details.
 
         Here's the conversation history with the user's messages and the action you took:
         """
 
-    prompt = f"{system} Conversation Log and Actions Taken:\n" + "\n".join(actions)
+    prompt = f"{system} AI Log and Actions Takenw without user of human:\n" + "\n".join(actions)
 
     response = chat.invoke(prompt)
     print(f"{response.content}")
@@ -272,7 +285,7 @@ def clear_messages_workflow(responses):
 def ask_gaia_with_tool(message: str):
     responses = []
     for s in research_graph.stream(
-        {"messages": [("user", message)]},
+        {"messages": [("user", str(message))]},
         {"recursion_limit": 6},
     ):
         print(f"Main : {s}")
@@ -281,6 +294,11 @@ def ask_gaia_with_tool(message: str):
     print("\n\n" + responses[-2]["executor"]["messages"][0].content)
     last_response = responses[-2]["executor"]["messages"][0].content
     
-    print(f"History : {(responses)}")
-    combine_respoonde=combine_question(history=message, last_message=last_response[:-16])
-    return responses, combine_respoonde
+    print(f"History : {(message)}")
+    
+    if len(message) >1:
+        combine_respoonde=combine_question(history=message, last_message=last_response[:-16])
+        print(f"\n\nCombine : {combine_respoonde}\n\n")
+        return responses, combine_respoonde
+    else:
+        return responses, last_response[:-16]
