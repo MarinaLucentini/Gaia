@@ -5,3 +5,4 @@ openai
 langchain-groq
 langgraph
 folium>=0.12.1
+streamlit-folium>=0.1.0
