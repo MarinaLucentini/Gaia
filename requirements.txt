@@ -3,3 +3,4 @@ streamlit
 python-dotenv
 openai
 langchain-groq
+langgraph
