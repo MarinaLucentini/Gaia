@@ -4,3 +4,4 @@ python-dotenv
 openai
 langchain-groq
 langgraph
+folium
