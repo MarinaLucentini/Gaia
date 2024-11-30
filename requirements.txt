@@ -4,4 +4,4 @@ python-dotenv
 openai
 langchain-groq
 langgraph
-folium
+folium>=0.12.1
