@@ -127,18 +127,26 @@ def give_a_response(messages_of_request: list[str]):
 
 
 @tool
-def call_emergency():
-    """Call the emergency number only in situations of real danger, such as imminent death or when someone can seriously harm you"""
-    print(f"\t TOOL call_emergency : Call emergency number called")
-    return "Call emergency number called"
+def call_emergency(level_of_danger: int):
+    """Call the emergency number only in situations of real danger,give a level from 0 to 3 of danger
+    where 0 is not dangerous and 3 is very dangerous, 1 is maybe dangerous and 2 is probably dangerous"""
+    print(f"\t TOOL call_emergency : level {level_of_danger} ")
 
+    if level_of_danger==0:
+        return "The situation is not dangerous"
+    elif level_of_danger==1:
+        return "We need more information about the situation"
+    elif level_of_danger==2:
+        return "We sent a report to the emergency number"
+    else:
+        return "Emergency number called"
 
 @tool
 def send_report():
     """Send a short report to the emergency number, if the situation is dangerous or suspicious"""
     print(f"\t TOOL send_report : Call emergency number called")
 
-    return "Call emergency number called"
+    return "save conversation and send report "
 
 
 @tool
