@@ -14,6 +14,7 @@ from typing import TypedDict, Literal
 from dotenv import load_dotenv
 import os
 
+
 # Carica le variabili dal file .env
 load_dotenv()
 
@@ -70,7 +71,7 @@ def combine_question(history,last_message):
     - Action as report or called emergency number are included in the response was make from the AI in background.
     - The response avoids redundancy and reflects the context of the user's situation.
     - If the user mentions food, pizza, or drinks, consider it might be coded language indicating they are under control or at risk, and respond accordingly.
-    - The tone remains supportive, reassuring, and concise (under 60 words).
+    - The tone remains supportive, reassuring, and concise (under 50 words).
 
     Generate a logical, sensitive, empathic and proactive response that addresses the user's immediate needs.
     

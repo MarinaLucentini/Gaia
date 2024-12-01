@@ -2,20 +2,16 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
-from llm import ask_gaia_with_tool
+from src.workflows.main_workflow import ask_gaia_with_tool
 import geocoder
 
 # Configurazione del tema
-st.set_page_config(page_title="Gaia - Sicurezza e Supporto", layout="wide", page_icon="logo.png" )
+st.set_page_config(page_title="Gaia - Security and Support", layout="wide", page_icon="logo.png",)
 
 st.markdown(
     """
     <style>
     /* Sfondo generale */
-    .css-18e3th9 {
-        background-color: #ff0000 !important; /* Rosso */
-        color: #ffffff !important;           /* Bianco */
-    }
     .stMain{
         background-color: #900; /* Rosso */
         color: #ffffff !important; 
@@ -85,6 +81,13 @@ st.markdown(
     background-color: #900;
     }
     
+    .st-emotion-cache-janbn0 {
+        display: flex;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: rgb(153 0 0);
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -99,38 +102,38 @@ if st.sidebar.button("🏠 Home"):
  
     st.session_state["current_page"] = "Home"
 
-if st.sidebar.button("💬 Chat con Gaia"):
-    st.session_state["current_page"] = "Chat con Gaia"
+if st.sidebar.button("💬 Chatting with Gaia"):
+    st.session_state["current_page"] = "Chatting with Gaia"
 
-if st.sidebar.button("🗺️ Mappa Aree Rischiose"):
-    st.session_state["current_page"] = "Mappa Aree Rischiose"
+if st.sidebar.button("🗺️ Hazardous Areas Map"):
+    st.session_state["current_page"] = "Hazardous Areas Map"
 
-if st.sidebar.button("📞 Chiama il 112"):
-    st.session_state["current_page"] = "Chiamata di emergenza"
+if st.sidebar.button("📞 Call 112"):
+    st.session_state["current_page"] = "Emergency Call"
 # Pagina 1: Nome e Descrizione dell'App
 if st.session_state["current_page"] == "Home":
 
-    st.title("Gaia - Sicurezza e Supporto")
+    st.title("Gaia - Security and Support")
     st.image("logo.png",   width=100)    
     st.write("""
-        Gaia è un'applicazione mobile progettata per fornire supporto emotivo e sicurezza alle donne.
-        Attraverso l'intelligenza artificiale, Gaia simula una conversazione per offrire compagnia
-        e può aiutarti a contattare i servizi di emergenza in caso di pericolo.
+        Gaia is a mobile application designed to provide emotional support and security for women.
+        Through artificial intelligence, Gaia simulates a conversation to offer companionship
+        and can help you contact the emergency services in case of danger.
     """)
     
-    st.write("Naviga attraverso il menu per accedere alle diverse funzionalità.")
+    st.write("Navigate through the menu to access the different functionalities.")
 
 # Pagina 2: Chat con Gaia
-elif st.session_state["current_page"] == "Chat con Gaia":
-    st.title("Chat con Gaia")
-    st.write("Parla con Gaia per sentirti al sicuro o contatta direttamente i servizi di emergenza.")
+elif st.session_state["current_page"] == "Chatting with Gaia":
+    st.title("Chatting with Gaia")
+    st.write("Talk to Gaia to feel safe or contact the emergency services directly.")
 
     # Inizializza la history nella sessione
     if "history" not in st.session_state:
         st.session_state["history"] = []
 
     # Input dell'utente
-    if query := st.chat_input("Scrivi un messaggio..."):
+    if query := st.chat_input("Write a message..."):
         st.session_state["history"].append({"role": "user", "content": query})
         response, last_response = ask_gaia_with_tool(st.session_state["history"])
         st.session_state["history"].append({"role": "assistant", "content": last_response})
@@ -142,14 +145,14 @@ elif st.session_state["current_page"] == "Chat con Gaia":
 
 
 # Pagina 3: Mappa delle Aree Rischiose
-elif st.session_state["current_page"] == "Mappa Aree Rischiose":
+elif st.session_state["current_page"] == "Hazardous Areas Map":
     # Dati iniziali delle aree pericolose
     data = {
         "Area": ["Termini", "Trastevere", "San Lorenzo", "Piazza Venezia", "Tor Bella Monaca"],
         "Lat": [41.901, 41.881, 41.893, 41.897, 41.867],
         "Lon": [12.501, 12.469, 12.518, 12.482, 12.592],
-        "Segnalazioni": [15, 8, 12, 20, 30],
-        "Pericolo": ["Aggressioni", "Furti", "Atti vandalici", "Furti", "Spaccio"],
+        "Reports": [15, 8, 12, 20, 30],
+        "Danger": ["Aggressions", "Theft", "", "Theft", "Drug Dealing"],
     }
 
     # Converti i dati in DataFrame
@@ -165,30 +168,30 @@ elif st.session_state["current_page"] == "Mappa Aree Rischiose":
             return "yellow"
 
     # Mappa interattiva
-    st.title("Mappa delle Aree Rischiose")
-    st.write("Qui puoi visualizzare la tua posizione e se sei vicino o meno a un'area pericolosa")
+    st.title("Map of Hazardous Areas")
+    st.write("Here you can view your location and whether or not you are close to a danger zone")
     mappa = folium.Map(location=[41.9028, 12.4964], zoom_start=12)
 
     for _, row in df.iterrows():
         folium.CircleMarker(
             location=(row["Lat"], row["Lon"]),
-            radius=row["Segnalazioni"] / 2,  # Dimensione del cerchio
-            color=get_risk_color(row["Segnalazioni"]),
+            radius=row["Reports"] / 2,  # Dimensione del cerchio
+            color=get_risk_color(row["Reports"]),
             fill=True,
             fill_opacity=0.6,
-            popup=f"<b>{row['Area']}</b><br>Pericolo: {row['Pericolo']}<br>Segnalazioni: {row['Segnalazioni']}",
+            popup=f"<b>{row['Area']}</b><br>Danger: {row['Danger']}<br>Reports: {row['Reports']}",
         ).add_to(mappa)
 
     # Mostrare avviso se vicino a un'area pericolosa
-    st.subheader("Avvisi di sicurezza")
+    st.subheader("Security Warnings")
     user_location = geocoder.ip("me").latlng
     if user_location:
         for _, row in df.iterrows():
             distance = ((row["Lat"] - user_location[0])**2 + (row["Lon"] - user_location[1])**2)**0.5
             if distance < 0.01:  # Approssimativamente 1 km
-                st.warning(f"⚠️ Sei vicino a una zona pericolosa: {row['Area']} ({row['Pericolo']})")
+                st.warning(f"⚠️ You are close to a dangerous area: {row['Area']} ({row['Pericolo']})")
     else:
-        st.error("Impossibile determinare la tua posizione attuale.")
+        st.error("Unable to determine your current position.")
 
     # Visualizzare la mappa
     st_folium(mappa, width="100%", height=400)
@@ -196,19 +199,19 @@ elif st.session_state["current_page"] == "Mappa Aree Rischiose":
 
 
 # Pagina 4: Chiamata di Emergenza
-elif st.session_state["current_page"] == "Chiamata di emergenza":
-    st.title("Sei sicuro di voler chiamare il numero di emergenza?")
+elif st.session_state["current_page"] == "Emergency Call":
+    st.title("Are you sure you want to call the emergency number?")
 
     # Bottone di conferma
     col1, col2 = st.columns(2)
     with col1:
-        conferma = st.button("Conferma", key="conferma")
+        conferma = st.button("Confirmation", key="Confirmation")
     with col2:
-        annulla = st.button("Annulla", key="annulla")
+        annulla = st.button("Cancel", key="Cancel")
 
     # Gestione dell'azione in base al bottone premuto
     if conferma:
-        st.warning("Chiamata in corso al numero di emergenza... 🚨")
+        st.warning("Call in progress to the emergency number... 🚨")
         # Aggiungi qui il codice per effettuare la chiamata
     elif annulla:
-        st.success("Chiamata annullata. Torna indietro e resta al sicuro!")
+        st.success("Call cancelled. Come back and stay safe!")
