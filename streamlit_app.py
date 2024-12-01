@@ -69,18 +69,12 @@ st.markdown(
     justify-content: center
     
     }
+    .stHorizontalBlock{
+    width: 75%
+    
+    }
     /* Bottoni nella sidebar */
-    .css-1v0mbdj {
-        background-color: #ffffff !important; /* Bianco */
-        color: #ff0000 !important;            /* Rosso */
-        border: 2px solid #ff0000 !important;
-        border-radius: 8px !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-    }
-    .css-1v0mbdj:hover {
-        background-color: #ffcccc !important; /* Rosso chiaro */
-    }
+ 
     .stBottom, .st-emotion-cache-qdbtli{
     background-color: #900;
     }
