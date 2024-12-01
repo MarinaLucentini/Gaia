@@ -6,7 +6,7 @@ from llm import ask_gaia_with_tool
 import geocoder
 
 # Configurazione del tema
-st.set_page_config(page_title="Gaia - Sicurezza e Supporto", layout="wide")
+st.set_page_config(page_title="Gaia - Sicurezza e Supporto", layout="wide", page_icon="logo.png",)
 
 # Stile personalizzato
 st.markdown(
@@ -67,6 +67,12 @@ st.markdown(
     justify-content: center;
     
     }
+    .st-emotion-cache-0{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-block: auto
+    }
     /* Testi generici */
     .stTextInput, .stButton, .stTextArea, .stChatMessage {
         color: #ffffff !important;
@@ -102,11 +108,14 @@ if st.sidebar.button("📞 Chiama il 112"):
 if st.session_state["current_page"] == "Home":
 
     st.title("Gaia - Sicurezza e Supporto")
+    st.image("logo.png",   width=100)    
     st.write("""
         Gaia è un'applicazione mobile progettata per fornire supporto emotivo e sicurezza alle donne.
         Attraverso l'intelligenza artificiale, Gaia simula una conversazione per offrire compagnia
         e può aiutarti a contattare i servizi di emergenza in caso di pericolo.
     """)
+    
+    st.write("Naviga attraverso il menu per accedere alle diverse funzionalità.")
 
 # Pagina 2: Chat con Gaia
 elif st.session_state["current_page"] == "Chat con Gaia":
