@@ -10,7 +10,7 @@ from src.utils.logger_utils import logger
 
 executor_agent = create_react_agent(
     chat,
-    tools=[calculate_food_and_drinks, call_emergency, send_report],
+    tools=[calculate_food_and_drinks, send_report],
 )
 
 

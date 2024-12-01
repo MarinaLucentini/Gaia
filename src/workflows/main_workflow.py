@@ -35,11 +35,11 @@ def ask_gaia_with_tool(message: str):
     ]  # remove " FINISH EXECUTOR"
     logger.info(f"last response executor: {last_response}")
 
-    if len(message) > 1:
-        combine_respoonde = combine_question(
-            history=message, last_message=last_response
-        )
-        logger.info(f"Combine question: {last_response}")
-        return responses, combine_respoonde
-    else:
-        return responses, last_response
+    # if len(message) > 1:
+    combine_respoonde = combine_question(
+        history=message, last_message=last_response
+    )
+    logger.info(f"Combine question: {last_response}")
+    return responses, combine_respoonde
+    # else:
+    #     return responses, last_response

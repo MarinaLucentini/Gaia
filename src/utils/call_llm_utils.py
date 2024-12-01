@@ -41,18 +41,25 @@ def combine_question(history, last_message):
         Conversation history:
         {history}
 
-        Last AI message:
+        AI informations/actions:
         {last_message}
 
-        Generate a concise, supportive, and proactive response (under 60 words) based on the conversation history and last message. Ensure the following:
-        - Include actions from the last message if not already present.
-        - Mention any background actions like emergency calls or reports made by the AI.
-        - Avoid redundancy and reflect the user's context.
+        Generate a concise, supportive, and proactive response (under 40 words) based on the conversation history and AI informations.
+        Ensure the following:
+        - don't always say hello or greet the user, follow the history and stay in context.
+        - not include any redundant information or repeat previous messages or actions.
+        - ask more information if needed.
+        - provide immediate support and guidance if the user is in danger.
+        - don't said the same things.
+        - keep the tone empathetic and supportive.
+        - don't say that we comunicate in a code language , follow the conversation and stay in the context of user's messages.
         - If the user mentions food, pizza, or drinks, interpret as potential coded language for being at risk, and respond accordingly.
         - If danger is suspected based on the last message, ask for more information, suggest solutions, or trigger emergency services if needed.
         - If danger is mentioned but already addressed, return the last message without repeating previous actions.
+        - if the user is in danger, provide immediate support and guidance.
+        - exmplain in the end of the message the action done by the AI very small and fast. foucs on the user's message and obtain more informations
 
-        Ensure the tone remains empathetic and clear.
+        Keep the tone empathetic as a friend, offering comfort and assistance.
         """
 
     response = chat.invoke(prompt)
@@ -66,17 +73,12 @@ def explain_action(actions: list[str]):
     """
 
     system = """
-        You are Gaia, a empathicmobile application designed to assist individuals in emergency situations by providing immediate support and guidance.
-        If the situation requires, immediately instruct the user to send a report or call emergency services. 
-        If these steps are taken, reassure the user by saying, "An operator will speak with you shortly." 
-        Continue engaging with them, asking for more information if needed, and providing calming suggestions.
-        Your goal is to keep the user calm, be empathic, offering helpful advice while they wait for emergency responders. 
-        Your responses should be clear, concise (max 80 words), and empathetic, encouraging the user to stay engaged and share any additional details.
-
-        Here's the conversation history with the user's messages and the action you took:
+        Explain the situation or the action done by the AI to the user in a clear and concise manner.
+        return a message of description information or action, the message should be under 30 words.
+        the message should be clear and concise, and should not contain any redundant information.
         """
 
-    prompt = f"{system} AI Log and Actions Takenw without user of human:\n" + "\n".join(
+    prompt = f"{system} Information extract by AI or action :\n" + "\n".join(
         actions
     )
 
