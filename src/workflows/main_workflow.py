@@ -7,10 +7,9 @@ from src.agents.executor_agent import executor_node
 from src.agents.supervisor_agent import make_supervisor_node
 from src.tools.actions_tool import call_emergency, send_report
 from src.tools.general_tool import calculate_food_and_drinks, give_a_response
-from src.utils.call_llm_utils import combine_question
+from src.utils.call_llm_utils import combine_question,ask_question
 from src.utils.llm_utils import chat
 from src.utils.logger_utils import logger
-
 
 research_supervisor_node = make_supervisor_node(chat, ["executor"])
 research_builder = StateGraph(MessagesState)
@@ -30,16 +29,19 @@ def ask_gaia_with_tool(message: str):
     ):
         responses.append(s)
         logger.debug(f"Responses: {s}")
-    last_response = responses[-2]["executor"]["messages"][0].content[
-        :-16
-    ]  # remove " FINISH EXECUTOR"
-    logger.info(f"last response executor: {last_response}")
+    try:
+        last_response = responses[-2]["executor"]["messages"][0].content[
+            :-16
+        ]  # remove " FINISH EXECUTOR"
+        logger.info(f"last response executor: {last_response}")
 
-    # if len(message) > 1:
-    combine_respoonde = combine_question(
-        history=message, informations=last_response
-    )
-    logger.info(f"Combine question: {last_response}")
-    return responses, combine_respoonde
+        # if len(message) > 1:
+        combine_respoonde = combine_question(
+            history=message, informations=last_response
+        )
+        logger.info(f"Combine question: {last_response}")
+        return responses, combine_respoonde
+    except:
+        last_response=ask_question(message)
     # else:
     #     return responses, last_response
