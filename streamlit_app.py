@@ -131,36 +131,57 @@ elif st.session_state["current_page"] == "Chat con Gaia":
 
 # Pagina 3: Mappa delle Aree Rischiose
 elif st.session_state["current_page"] == "Mappa Aree Rischiose":
-    st.title("Mappa delle Aree Rischiose")
-    st.write("Consulta la mappa per identificare le aree con maggiori segnalazioni di emergenza a Roma.")
-      # Ottenere la posizione dell'utente
-    g = geocoder.ip('me')  # Ottieni la posizione tramite IP
-    user_location = g.latlng if g.latlng else [41.9028, 12.4964]  # Default: Roma
-
-    # Dataset di esempio
+    # Dati iniziali delle aree pericolose
     data = {
         "Area": ["Termini", "Trastevere", "San Lorenzo", "Piazza Venezia", "Tor Bella Monaca"],
         "Lat": [41.901, 41.881, 41.893, 41.897, 41.867],
         "Lon": [12.501, 12.469, 12.518, 12.482, 12.592],
         "Segnalazioni": [15, 8, 12, 20, 30],
+        "Pericolo": ["Aggressioni", "Furti", "Atti vandalici", "Furti", "Spaccio"],
     }
+
+    # Converti i dati in DataFrame
     df = pd.DataFrame(data)
 
-     # Creazione della mappa
-    mappa = folium.Map(location=user_location, zoom_start=12)
-    folium.Marker(location=user_location, popup="La tua posizione", icon=folium.Icon(color="blue")).add_to(mappa)
+    # Funzione per classificare i rischi in base al numero di segnalazioni
+    def get_risk_color(segnalazioni):
+        if segnalazioni >= 20:
+            return "red"
+        elif 10 <= segnalazioni < 20:
+            return "orange"
+        else:
+            return "yellow"
 
-    for index, row in df.iterrows():
+    # Mappa interattiva
+    st.title("Mappa delle Aree Rischiose")
+    st.write("Qui puoi visualizzare la tua posizione e se sei vicino o meno a un'area pericolosa")
+    mappa = folium.Map(location=[41.9028, 12.4964], zoom_start=12)
+
+    for _, row in df.iterrows():
         folium.CircleMarker(
             location=(row["Lat"], row["Lon"]),
-            radius=row["Segnalazioni"] / 2,
-            color="red",
+            radius=row["Segnalazioni"] / 2,  # Dimensione del cerchio
+            color=get_risk_color(row["Segnalazioni"]),
             fill=True,
             fill_opacity=0.6,
-            popup=f"{row['Area']}: {row['Segnalazioni']} segnalazioni",
+            popup=f"<b>{row['Area']}</b><br>Pericolo: {row['Pericolo']}<br>Segnalazioni: {row['Segnalazioni']}",
         ).add_to(mappa)
 
+    # Mostrare avviso se vicino a un'area pericolosa
+    st.subheader("Avvisi di sicurezza")
+    user_location = geocoder.ip("me").latlng
+    if user_location:
+        for _, row in df.iterrows():
+            distance = ((row["Lat"] - user_location[0])**2 + (row["Lon"] - user_location[1])**2)**0.5
+            if distance < 0.01:  # Approssimativamente 1 km
+                st.warning(f"⚠️ Sei vicino a una zona pericolosa: {row['Area']} ({row['Pericolo']})")
+    else:
+        st.error("Impossibile determinare la tua posizione attuale.")
+
+    # Visualizzare la mappa
     st_folium(mappa, width=700, height=500)
+
+
 
 # Pagina 4: Chiamata di Emergenza
 elif st.session_state["current_page"] == "Chiamata di emergenza":
