@@ -188,7 +188,7 @@ elif st.session_state["current_page"] == "Mappa Aree Rischiose":
         st.error("Impossibile determinare la tua posizione attuale.")
 
     # Visualizzare la mappa
-    st_folium(mappa, width=700, height=500)
+    st_folium(mappa, width="100%", height=400)
 
 
 
