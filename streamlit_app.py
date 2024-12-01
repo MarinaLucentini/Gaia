@@ -8,81 +8,83 @@ import geocoder
 # Configurazione del tema
 st.set_page_config(page_title="Gaia - Security and Support", layout="wide", page_icon="logo.png",)
 
-# Stile personalizzato
 st.markdown(
     """
     <style>
-    /* Sfondo e colore del testo */
-    body {
-        background-color: #ff0000; /* Rosso */
-        color: #ffffff;           /* Bianco */
+    /* Sfondo generale */
+    .css-18e3th9 {
+        background-color: #ff0000 !important; /* Rosso */
+        color: #ffffff !important;           /* Bianco */
+    }
+    .stMain{
+        background-color: #900; /* Rosso */
+        color: #ffffff !important; 
+        height: 100vh;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+    
+    }
+    /* Testo generico */
+    .css-10trblm {
+        color: #ffffff !important; /* Colore testo */
+    }
+    /* Header */
+    .css-1v3fvcr {
+        background-color: #900 !important; /* Rosso scuro */
+        color: #ffffff !important;
+    }
+    /* Sidebar */
+    .css-1d391kg {
+        background-color: #900 !important; /* Rosso scuro */
+        color: #ffffff !important;
     }
     /* Sidebar */
     .stSidebar {
         background-color: #900; 
+        display: flex; 
+        align-items: center;
      
+    }
+    .st-emotion-cache-n5r31u {
+     background-color: black; 
+     color: white;
     }
     /* header */ 
     .stAppHeader {
      background-color: #900; 
     }
     /* main container */
-      .stMainBlockContainer{
+      .stMainBlockContainer, .stMainBlockContainer , .stVerticalBlock {
     background-color: #900; 
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 75%;
+    width: 100% !important;
     }
-    /* chat */ 
-    
-    .st-emotion-cache-qdbtli {
-     background-color: #900;
+    .st-emotion-cache-0 {
+    display: flex;
+    justify-content: center
     
     }
     /* Bottoni nella sidebar */
-    .menu-button {
-        background-color: #ffffff; /* Bianco */
-        color: #ff0000;            /* Rosso */
-        border: 2px solid #ff0000;
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 16px;
-        text-align: center;
-        cursor: pointer;
-        margin-bottom: 10px;
-        font-weight: bold;
+    .css-1v0mbdj {
+        background-color: #ffffff !important; /* Bianco */
+        color: #ff0000 !important;            /* Rosso */
+        border: 2px solid #ff0000 !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
     }
-    .menu-button:hover {
-        background-color: #ffcccc; /* Rosso chiaro */
+    .css-1v0mbdj:hover {
+        background-color: #ffcccc !important; /* Rosso chiaro */
     }
-    .stVerticalBlock {
-    text-align: center;
-    }
-    .float-child{
+    .stBottom, .st-emotion-cache-qdbtli{
     background-color: #900;
-    display: flex;
-    justify-content: center;
+    }
     
-    }
-    .st-emotion-cache-0{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-block: auto
-    }
-    /* Testi generici */
-    .stTextInput, .stButton, .stTextArea, .stChatMessage {
-        color: #ffffff !important;
-    }
-    /* FontAwesome Icons */
-    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
-    .icon {
-        font-size: 20px;
-        margin-right: 8px;
-    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -94,6 +96,7 @@ if "current_page" not in st.session_state:
 
 # Logica per cambiare pagina
 if st.sidebar.button("🏠 Home"):
+ 
     st.session_state["current_page"] = "Home"
 
 if st.sidebar.button("💬 Chatting with Gaia"):
