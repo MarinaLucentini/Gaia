@@ -55,14 +55,19 @@ st.markdown(
      background-color: #900; 
     }
     /* main container */
-      .stMainBlockContainer{
+      .stMainBlockContainer, .stMainBlockContainer , .stVerticalBlock {
     background-color: #900; 
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 75%;
+    width: 100% !important;
+    }
+    .st-emotion-cache-0 {
+    display: flex;
+    justify-content: center
+    
     }
     /* Bottoni nella sidebar */
     .css-1v0mbdj {
@@ -76,6 +81,10 @@ st.markdown(
     .css-1v0mbdj:hover {
         background-color: #ffcccc !important; /* Rosso chiaro */
     }
+    .stBottom, .st-emotion-cache-qdbtli{
+    background-color: #900;
+    }
+    
     </style>
     """,
     unsafe_allow_html=True,
@@ -87,14 +96,7 @@ if "current_page" not in st.session_state:
 
 # Logica per cambiare pagina
 if st.sidebar.button("🏠 Home"):
-    st.sidebar.button.markdown(
-        """
-        <style> 
-        background-color: "black"
-        </style>
-         """,
-    unsafe_allow_html=True,
-    )
+ 
     st.session_state["current_page"] = "Home"
 
 if st.sidebar.button("💬 Chat con Gaia"):
