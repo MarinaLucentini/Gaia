@@ -43,5 +43,6 @@ def ask_gaia_with_tool(message: str):
         return responses, combine_respoonde
     except:
         last_response=ask_question(message)
+        return responses, last_response
     # else:
     #     return responses, last_response
