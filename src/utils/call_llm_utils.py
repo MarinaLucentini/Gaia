@@ -23,45 +23,34 @@ def ask_question(question):
     return response.content
 
 
-def combine_question(history, last_message):
+def combine_question(history, informations):
     key_meaning = (
-            "Gaia is a mobile app designed to provide safety and support to women in potentially risky situations. "
-            "It simulates an AI conversation for emotional reassurance and a sense of security. "
-            "Gaia also allows users to call emergency services instantly, and features a map highlighting dangerous areas "
-            "based on real-time emergency data. This helps users avoid risky locations and assists law enforcement in targeting areas "
-            "with higher safety concerns. Additionally, Gaia can serve as a virtual companion, offering a feeling of presence and support."
-        )
-    
-    
+        "Gaia is a mobile app designed for women's safety, offering emotional reassurance and real-time support. "
+        "It can call emergency services, highlight risky areas, and provide a feeling of presence. Gaia helps users avoid dangerous places, "
+        "assist law enforcement, and provide virtual companionship."
+    )
+
+    logger.info(f"\n AI ACTION: {informations}\n")
     prompt = f"""
-        You are Gaia, a mobile app designed to ensure the safety and well-being of women in potentially risky situations.
+    {key_meaning}
 
-        {key_meaning}
+    Conversation history:
+    {history}
 
-        Conversation history:
-        {history}
+    AI information/actions:
+    {informations}
+    Insert this information if called or reported and suggest solutions.
 
-        AI informations/actions:
-        {last_message}
+    Generate a concise, supportive response (under 50 words) explaining the action and information extracted, with a respectful and professional tone. Ensure the following:
+    - Stay in context, avoid unnecessary greetings or repeating messages.
+    - Don't repeat previous actions or say "hello," "hi," or similar phrases like "I'm here to help..."
+    - Provide immediate support if the user is in danger.
+    - Maintain a tone that is empathetic and family-like, but without using informal or overly affectionate language.
+    - If a report or emergency call was made, mention it if not in history.
 
-        Generate a concise, supportive, and proactive response (under 40 words) based on the conversation history and AI informations.
-        Ensure the following:
-        - don't always say hello or greet the user, follow the history and stay in context.
-        - not include any redundant information or repeat previous messages or actions.
-        - ask more information if needed.
-        - provide immediate support and guidance if the user is in danger.
-        - don't said the same things.
-        - keep the tone empathetic and supportive.
-        - don't say that we comunicate in a code language , follow the conversation and stay in the context of user's messages.
-        - If the user mentions food, pizza, or drinks, interpret as potential coded language for being at risk, and respond accordingly.
-        - If danger is suspected based on the last message, ask for more information, suggest solutions, or trigger emergency services if needed.
-        - If danger is mentioned but already addressed, return the last message without repeating previous actions.
-        - if the user is in danger, provide immediate support and guidance.
-        - exmplain in the end of the message the action done by the AI very small and fast. foucs on the user's message and obtain more informations
-
-        Keep the tone empathetic as a friend, offering comfort and assistance.
-        """
-
+    Keep the tone respectful, comforting, and helpful.
+    """
+    logger.info(f"UPDATE 2")
     response = chat.invoke(prompt)
     logger.info(f"{response.content}")
     return response.content

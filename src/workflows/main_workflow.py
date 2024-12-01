@@ -37,7 +37,7 @@ def ask_gaia_with_tool(message: str):
 
     # if len(message) > 1:
     combine_respoonde = combine_question(
-        history=message, last_message=last_response
+        history=message, informations=last_response
     )
     logger.info(f"Combine question: {last_response}")
     return responses, combine_respoonde
