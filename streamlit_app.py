@@ -12,10 +12,6 @@ st.markdown(
     """
     <style>
     /* Sfondo generale */
-    .css-18e3th9 {
-        background-color: #ff0000 !important; /* Rosso */
-        color: #ffffff !important;           /* Bianco */
-    }
     .stMain{
         background-color: #900; /* Rosso */
         color: #ffffff !important; 
@@ -85,6 +81,13 @@ st.markdown(
     background-color: #900;
     }
     
+    .st-emotion-cache-janbn0 {
+        display: flex;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: rgb(153 0 0);
+    }
     </style>
     """,
     unsafe_allow_html=True,
